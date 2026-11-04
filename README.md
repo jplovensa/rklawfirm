@@ -8,7 +8,7 @@ Run `npm run dev` from this directory (Python 3 required). The server listens on
 
 ## GitHub Pages
 
-In repository **Settings → Pages**, choose **Deploy from a branch**, select **main**, and **/ (root)**. Relative URLs support project-site hosting. `.nojekyll` disables Jekyll processing. Pushing source to GitHub does not itself enable Pages.
+In repository **Settings → Pages → Build and deployment**, choose **GitHub Actions** as the source. The `Deploy RK website to GitHub Pages` workflow runs on every push to `main` and can also be run manually from the Actions tab. It uploads only the public HTML, CSS, JavaScript and assets; development files and tests are excluded. Relative URLs support project-site hosting. GitHub Pages must be enabled before the workflow can deploy. Successful deployment exposes the actual site URL in the workflow environment output.
 
 ## Browser tests
 
