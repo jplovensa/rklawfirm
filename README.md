@@ -1,47 +1,53 @@
-# Ryan Kurniawan & Partners
+# Ryan Kurniawan & Partners · Nadia Difa Khairunnisa
 
-Static RK law firm website and dedicated notarial services page. Plain HTML, CSS and JavaScript; no React, bundler, backend or runtime dependencies.
+A static bilingual law firm website and a distinct notarial practice experience. Plain HTML, CSS and JavaScript; no React, bundler, backend, analytics or runtime dependencies.
 
 ## Run
 
-Run `npm run dev` from this directory (Python 3 required). The server listens on port 4173. Serving the site itself does not require npm dependencies or a build.
+Run `npm run dev` here (Python 3 required). The server listens on port 4173. Serving the site does not require npm installation or a build.
 
-## GitHub Pages
+## Deploy
 
-In repository **Settings → Pages → Build and deployment**, choose **GitHub Actions** as the source. The `Deploy RK website to GitHub Pages` workflow runs on every push to `main` and can also be run manually from the Actions tab. It uploads only the public HTML, CSS, JavaScript and assets; development files and tests are excluded. Relative URLs support project-site hosting. GitHub Pages must be enabled before the workflow can deploy. Successful deployment exposes the actual site URL in the workflow environment output.
+GitHub Pages uses **GitHub Actions** as its source. `.github/workflows/deploy-pages.yml` publishes on every push to `main`, or by manual dispatch. Only public HTML, CSS, JavaScript and assets are uploaded; development files and tests are excluded. Relative URLs support project-site hosting. `i18n.js` is explicitly included in the artifact.
 
-## Browser tests
+## Browser checks
 
 ```sh
 npm ci
 CHROMIUM_PATH=/usr/bin/chromium npm test
 ```
 
-Start the server before testing. Set `BASE_URL` for another server address and `CHROMIUM_PATH` for another Chromium executable. If needed, install a Playwright browser using `npx playwright install chromium`, then set `CHROMIUM_PATH` to its executable. The prepared cloud environment has system Chromium 154 installed; browser execution requires supported sandbox escalation.
+Start the server first. Override `BASE_URL` or `CHROMIUM_PATH` for another server/browser. The prepared cloud machine has system Chromium 154; browser execution may need supported command-sandbox escalation. If a browser is absent, install with `npx playwright install chromium` and set its executable path.
 
-87 browser checks cover both pages, loaded images, local Inter fonts, responsive widths, navigation, service menu selection and keyboard behavior, enquiry text, direct service links, JavaScript-disabled fallback, video playback, pause/resume, reduced motion, opening-film dismissal/failure fallback, bilingual persistence, translated enquiries and console errors. Screenshots are saved to ignored `test-results/`.
+100 browser checks cover both routes/languages, image and Inter loading, responsive text visibility, navigation, separate hero assets, video playback/pause, chapter seeking, opening replay on refresh, skip/Escape/media failure, reduced motion, service selection, keyboard controls, bilingual enquiries and simulation progression/back/restart/route changes. Screenshots are saved to ignored `test-results/`.
 
-## Design and assets
+## Two video narratives
 
-- The layout adapts the user-supplied Makes & Partners desktop screenshots: emerald contact strip, white sticky navigation, full-bleed media hero and an asymmetric photographic practice grid. It is a screenshot-led RK adaptation, not a verified copy of unseen parts or interactions of the live source.
-- The hero uses the user's supplied MP4, re-encoded to H.264 (1280 × 720), without audio, with fast-start metadata. The 10-second video loops silently where autoplay is supported. It has a pause/play control and a poster fallback. Reduced-motion and data-saving users receive the poster until they choose to play. No video source is loaded automatically in reduced-motion mode.
-- The RK monogram and decorative practice photography are generated design assets. The hero video is user supplied. The original founder photograph is displayed through a CSS crop from the supplied poster; no generated face is used.
-- Inter is self-hosted at 400/500/600/700 weights; SIL Open Font License included in `assets/fonts/OFL.txt`.
-- Bootstrap Icons are included under the MIT license in `assets/ICONS-LICENSE.txt`.
-- Biography and notary identity/contact details derive from supplied references. The user authorized Nadia's email/WhatsApp for both RK and notary enquiries. Confirm current appointments and service descriptions before publishing.
-- Notary cards act as an accessible single-selection menu. Selection updates the details and prefilled WhatsApp enquiry. Arrow keys, Home/End, panel labels and deep links work. All service details remain available without JavaScript.
-- Enquiries open WhatsApp or an email client. The site does not store or submit personal information to a backend.
+- **RK:** `assets/rk-city-hero.mp4` is optimized from the user-uploaded `gemini_generated_video_b31eb4f0.mp4`. It has its own poster, emerald cinematic overlay and lower-frame shadow for readable copy.
+- **Notary:** `assets/rk-hero.mp4` preserves the original journey clip from `tsk_5a2edf45585f7957fa1e17993332e740.mp4`. It now fills the hero width. Three chapter controls seek to real points in this clip, supporting the narrative “With you, at every step.”
+- Both assets are muted H.264, 1280 × 720 with fast-start metadata and no audio stream. Poster images and explicit play/pause controls cover autoplay denial. Reduced-motion/data-saving preferences prevent automatic media loading/playback.
+- The shutter-style opening uses the relevant practice's clip and **replays on every full page load/refresh**, including deep-link refreshes. Skip and Escape remain available. The opening has a bounded timeout and exits on media failure. Reduced-motion/data-saving visitors bypass it. Language changes and in-page service selection do not reload the page or replay the opening.
+
+## Notary journey simulation
+
+The notary header and identity belong to **Nadia Difa Khairunnisa, S.H., M.Kn.** The corporate site remains accessible from its footer.
+
+Choose a service route, then use **Play this journey** to enter a three-checkpoint simulation:
+
+1. Choose individual or business context.
+2. Choose initial guidance or documents to discuss.
+3. Review the derived briefing and optionally open WhatsApp with that context.
+
+Back preserves choices. Play again resets them. Choose a different route returns focus to the selected service card. The progress bar represents actual simulation checkpoints, not legal readiness. This is a rehearsal, not a booking, legal assessment or document submission. The office confirms requirements, fees, attendance and appointments. No documents or personal identifiers are collected or stored. Direct enquiries remain available without playing the simulation. Static service content remains readable without JavaScript.
+
+## Language and assets
+
+- EN / ID translates headings, public copy, controls, accessibility labels, metadata, simulation feedback, summaries and enquiry messages. Selection is stored locally and carried via `?lang=id`. Edit the dictionary in `i18n.js` while preserving `data-i18n` keys. Proper names, credentials and addresses stay unchanged. Static no-JavaScript content is English.
+- Local Inter fonts (400/500/600/700) include the SIL Open Font License in `assets/fonts/OFL.txt`.
+- Bootstrap Icons include the MIT license in `assets/ICONS-LICENSE.txt`.
+- The RK monogram and practice photography are generated assets; both videos were supplied by the user. The founder uses the original supplied photograph via a CSS crop.
+- Biography and contact details come from supplied references. The user authorized Nadia's contact channels for both practices. No third-party client matters, awards or outcomes are claimed.
 
 ## Cloud setup
 
-The environment draft has tested `install_script` and `start_skill` instructions. Internet access is controlled separately by environment settings, never by a shell script. Custom domain additions for `makeslaw.com` and `www.makeslaw.com` were saved for optional further live-source inspection. The current design is grounded in screenshots provided directly by the user.
-
-## Cinematic opening and bilingual experience
-
-The opening film plays once per browser session, using the supplied hero video with an RK title sequence. Visitors can skip it or press Escape. It is automatically bypassed for reduced-motion preferences, data-saving mode and deep links. The opening has a hard timeout and closes immediately if playback fails; it never waits indefinitely for a download. Without JavaScript, the dialog remains closed.
-
-The EN / ID switch translates navigation, headings, practice details, service descriptions, FAQs, accessibility labels, titles and enquiry messages. Language is stored locally and carried in `?lang=id` links across pages. No personal information is stored. Static no-JavaScript content remains available in English. The translation dictionary and language behavior are in `i18n.js`; preserve the `data-i18n` keys when editing markup. Proper names, official credentials and addresses remain unchanged.
-
-The notary practice has its own Nadia Difa Khairunnisa header, warm ivory/sage palette, editorial split hero with the supplied video in a moving aperture, and outcome-led service choices. Select directly, use keyboard arrows/Home/End, or use previous/next controls. A three-stage journey leads from purpose to details to visit preparation. The planner asks only individual/business and initial-guidance/documents choices, then prepares a service-specific WhatsApp message. It never requests or stores identity documents. Its Escape/close behavior returns focus to the initiating control. Language switching updates all content and enquiry text.
-
-The opening uses an expanding letterbox aperture, a slow film push, staged typography and an upward shutter exit. The notary opening displays Nadia’s name rather than RK branding. The main corporate layout and content are preserved. The second uploaded video was byte-identical to the original supplied clip; the existing optimized, audio-free asset is reused in both hero treatments.
+Tested installation/startup instructions are saved in the environment draft. Internet permissions are configured separately from scripts. The site layout is grounded in user-provided reference screenshots; live source access was restricted during development.

@@ -1,38 +1,37 @@
-# Independent notary practice and motion update
+# Video narrative and notary simulation — QA
 
 final result: passed
 
-## Design intent
+## Requested design
 
-The user requested distinction from the approved corporate design: a different opening motion, Nadia’s name in the notary header, an immersive design and a distinct UX. A later upload selected the supplied video for the hero. The two video uploads have identical SHA-256 values; the existing optimized video is reused. The corporate page retains its layout, content, RK identity and full-bleed hero. The notary practice uses a warm editorial layout, personal wordmark, framed video and guided visit planner.
+Replace only RK's hero media with the new user clip and cinematic overlay; preserve the original notary clip but make it wide, with an “every step of your journey” narrative. Replay the opening on refresh. Make the notary service experience a game simulation. Nadia’s independent identity and bilingual experience remain in place.
 
 ## Rendered evidence
 
-Actual Chromium screenshots, device scale factor 1:
+Actual Chromium captures, density 1:
 
-- `test-results/opening-shutter.png`: 1440 × 1000, corporate opening at approximately 1.7 seconds. Aperture reveal, staged typography and film push are visible; skip remains available.
-- `test-results/notary-independent-desktop.png`: 1440 × 1000, English, reduced-motion poster state. Personal header, warm ivory/forest palette, editorial headline and framed supplied video.
-- `test-results/notary-purpose-menu.png`: desktop outcome choices and service details.
-- `test-results/notary-visit-planner.png`: desktop planner with service summary, radio choices and enquiry action.
-- `test-results/notary-independent-mobile.png`: 390 × 844, Indonesian, final corrected headline and mobile personal header.
-- `test-results/notary-planner-mobile-id.png`: 390 × 844, Indonesian visit planner.
+- `test-results/rk-city-hero.png`: 1440 × 1000, new RK bridge/city clip poster with emerald overlay and readable RK copy.
+- `test-results/notary-wide-journey.png`: 1440 × 1000, original notary journey clip full width, narrative headline and three film chapters.
+- `test-results/notary-wide-mobile-id.png`: 390 × 844, Indonesian full-width journey hero, visible headline, controls and chapter labels.
+- `test-results/simulation-checkpoint-1.png`, `test-results/simulation-checkpoint-2.png`, `test-results/simulation-briefing.png`: 1440 × 1000, actual choice/checkpoint/result states.
+- `test-results/simulation-mobile-id.png`: 390 × 844, Indonesian derived briefing, enquiry action, back and replay controls in the scrollable dialog.
 
-Opened the desktop hero/planner and mobile headline captures and inspected the relevant states. This is an intentional redesign from the prior notary screen, not a pixel-identical adaptation of another firm's page.
+Opened the desktop hero/briefing and mobile hero/briefing captures for visual review. Design differences from prior framed notary hero and single-screen planner are intentional user-directed changes.
 
 ## Findings and fixes
 
-- P2: Indonesian word “Dipertimbangkan” extended beyond the narrow hero column while the section's overflow hid the excess. Reduced the mobile secondary heading scale and added line-fragment visibility assertions, beyond document-overflow checks. Captured the corrected 390px view again; full words are visible.
-- Visit-planning buttons are hidden in static HTML and enabled only when their dialog behavior is available. No-JavaScript visitors retain the full service content and direct enquiry links.
-- Personal notary branding replaces RK in the notary header and opening. Footer has the notary identity and an explicit return to the corporate site.
+- An explicit film-chapter click did not initially load metadata when automatic motion was disabled, because the video retained `preload=none`. The click now opts into loading, seeks once metadata arrives, and plays. A browser interaction check verifies the actual selected timeline position.
+- The floating back-to-top control could overlap RK’s lower-right film control at the page top. It is now hidden until the visitor scrolls down.
+- Dialog close/focus checks wait for the native asynchronous close event before checking the selected route's restored focus.
 
-No remaining P0/P1/P2 issue in the reviewed routes and states.
+No remaining actionable P0/P1/P2 issue in the reviewed states.
 
-## Visual surfaces
+## Fidelity surfaces
 
-Typography: local Inter retained; lighter editorial headlines and small uppercase captions distinguish the personal practice. Indonesian headline uses a smaller secondary scale on phones. Layout: split video composition on desktop, stacked on mobile, personal navigation, purpose choices and a two-column desktop planner. Color: warm ivory, sage and forest green scoped to the notary page. Assets: supplied video and poster reused; existing RK identity retained on the corporate page; standard licensed close icon added. Copy: services and visit information remain bilingual, with no invented notary qualifications or mandatory document lists. Planner asks non-identifying choices only and says final requirements/fees must be confirmed with the office.
+Typography: local Inter retained; large light-weight journey copy and compact chapter labels maintain the personal notary identity. Indonesian headings are checked for actual visible text fragments, not document overflow alone. Layout: both heroes are full-width; Nadia’s warm header remains distinct from RK. The simulation has a checkpoint trail, actual progress, context-sensitive feedback and a derived briefing; desktop and mobile layouts are readable. Color: RK’s new daylight clip receives a darker emerald overlay and lower-frame shadow. Notary uses its original clip with forest/ivory identity and sage simulation surfaces. Assets: separate user-supplied clips and posters, no hotlinked media, audio removed, file sizes suitable for static hosting. Copy: all new narrative, checkpoint, feedback, result and controls are bilingual. The simulation states it is not a booking or legal assessment and never invents statutory document requirements.
 
 ## Validation
 
-87 browser checks passed, with no normal-operation page/console errors. Coverage includes both pages and languages, video controls, opening skip/Escape/session behavior, media-failure fallback, reduced-motion bypass, responsive layout, actual translated-text visibility, service selection, keyboard movement, translated service enquiries, previous/next controls, Nadia header identity, no RK logo in that header, visit planner opening/closing, service context, individual/business and document-readiness message values, focus restoration, mobile planner width, language persistence and no-JavaScript reading.
+100 Playwright / Chromium checks passed; no normal-operation console/page errors. Verified refreshed opening playback, skip/Escape/failure fallback, motion-aware loading, actual separate hero sources, full-width notary media, chapter seeking, video pause/play, navigation, language persistence, long-text visibility, all service choices, keyboard selection, simulation branches, back/restart, summary/message derivation, change-route focus, mobile dialog width, and no-JavaScript service reading. Source MP4 metadata verified: both 1280 × 720 H.264; optimized site videos have no audio stream.
 
-JavaScript syntax and whitespace checks passed. No external messages were sent. Safari/iOS rendering remains untested; poster and manual-play controls cover autoplay restrictions. Deployment status is checked separately from these local results.
+External WhatsApp messages were not sent. Safari/iOS-specific rendering remains untested; poster/manual-play fallbacks remain available. Publication status is verified separately through GitHub Actions.

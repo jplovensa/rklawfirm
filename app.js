@@ -25,16 +25,13 @@ const opening = document.querySelector('.opening-film');
 let openingActive = false;
 let releaseOpening = () => {};
 if (opening && typeof opening.showModal === 'function') {
- let seen = false;
- try { seen = sessionStorage.getItem('rk-opening-seen') === '1'; } catch {}
- if (!seen && !location.hash && !reducedMotion.matches && !navigator.connection?.saveData) {
+ if (!reducedMotion.matches && !navigator.connection?.saveData) {
   openingActive = true;
   const film = opening.querySelector('video');
   let exiting = false;
   opening.showModal(); document.documentElement.classList.add('opening-active');
   function dismissOpening() {
    if (exiting) return; exiting = true;
-   try { sessionStorage.setItem('rk-opening-seen', '1'); } catch {}
    film.pause(); opening.classList.add('is-leaving');
    setTimeout(() => {
     opening.close(); document.documentElement.classList.remove('opening-active');
@@ -47,7 +44,7 @@ if (opening && typeof opening.showModal === 'function') {
   opening.addEventListener('cancel', event => { event.preventDefault(); dismissOpening(); });
   film.addEventListener('error', dismissOpening, {once:true});
   setTimeout(dismissOpening, 4200);
-  film.src = 'assets/rk-hero.mp4';
+  film.src = document.body.classList.contains('notary-page') ? 'assets/rk-hero.mp4' : 'assets/rk-city-hero.mp4';
   film.play().then(() => setTimeout(dismissOpening, 3200)).catch(dismissOpening);
   reducedMotion.addEventListener('change', () => { if (reducedMotion.matches) dismissOpening(); });
  }
@@ -129,14 +126,17 @@ if (heroVideo && videoToggle) {
  syncVideoButton();
 }
 const stickyHeader = document.querySelector('.site-header');
+const backTop = document.querySelector('.back-top');
 let headerTick = false;
-function syncHeader() { if (headerTick) return; headerTick = true; requestAnimationFrame(() => { stickyHeader?.classList.toggle('is-scrolled', scrollY > 40); headerTick = false; }); }
+function syncHeader() { if (headerTick) return; headerTick = true; requestAnimationFrame(() => { stickyHeader?.classList.toggle('is-scrolled', scrollY > 40); if (backTop) backTop.hidden = scrollY < 400; headerTick = false; }); }
 window.addEventListener('scroll', syncHeader, {passive:true});syncHeader();
 
-// The notary's guided visit planner keeps personal documents out of the website.
+// A reversible, choice-driven rehearsal of the notary enquiry journey.
 const planner = document.querySelector('.visit-planner');
 if (planner) {
  let triggeringButton;
+ let scene = 1;
+ let changingRoute = false;
  function journey(stage) { document.querySelectorAll('[data-journey]').forEach(step => { if (Number(step.dataset.journey) === stage) step.setAttribute('aria-current', 'step'); else step.removeAttribute('aria-current'); }); }
  function updatePlanner() {
   const selected = document.querySelector('[data-service-panel]:not([hidden])');
@@ -150,13 +150,72 @@ if (planner) {
    ? `Halo, saya ingin mengatur konsultasi mengenai ${title}. Layanan ini untuk ${party === 'business' ? 'badan usaha' : 'perorangan'}. ${readiness === 'documents' ? 'Saya memiliki dokumen untuk dibahas.' : 'Saya membutuhkan arahan awal.'} Mohon informasikan persyaratan, biaya, dan jadwal yang tersedia.`
    : `Hello, I would like to arrange a consultation about ${title}. This is for ${party === 'business' ? 'a business' : 'an individual'}. ${readiness === 'documents' ? 'I have documents to discuss.' : 'I need initial guidance.'} Please confirm the requirements, fees and available appointments.`;
   planner.querySelector('.planner-send').href = `https://wa.me/6285156129839?text=${encodeURIComponent(message)}`;
+  planner.querySelector('[data-summary=service]').textContent = title;
+  planner.querySelector('[data-summary=party]').textContent = t(party === 'business' ? 'A business' : 'An individual');
+  planner.querySelector('[data-summary=readiness]').textContent = t(readiness === 'documents' ? 'Documents to discuss' : 'Initial guidance');
+  planner.querySelector('[data-sim-party-feedback]').textContent = t(party === 'business'
+   ? 'Your route will focus on a business matter. The office will confirm the relevant company records and authorised parties.'
+   : 'Your route will focus on an individual matter. The office will confirm who needs to attend.');
+  planner.querySelector('[data-sim-readiness-feedback]').textContent = t(readiness === 'documents'
+   ? 'Your next move is a document discussion. Ask the office which originals or supporting records to bring.'
+   : 'Your next move is an initial consultation. Ask the office which documents will be needed.');
+ }
+ function showScene(number, focus = true) {
+  scene = Math.max(1, Math.min(3, number));
+  planner.querySelectorAll('[data-scene]').forEach(section => { section.hidden = Number(section.dataset.scene) !== scene; });
+  planner.querySelectorAll('[data-sim-stage]').forEach(step => {
+   const current = Number(step.dataset.simStage) === scene;
+   step.classList.toggle('is-complete', Number(step.dataset.simStage) < scene);
+   if (current) step.setAttribute('aria-current', 'step'); else step.removeAttribute('aria-current');
+  });
+  planner.querySelector('[data-simulation-counter]').textContent = `${String(scene).padStart(2, '0')} / 03`;
+  planner.querySelector('progress').value = scene;
+  planner.querySelector('[data-sim-back]').disabled = scene === 1;
+  planner.querySelector('[data-sim-next]').hidden = scene === 3;
+  planner.querySelector('[data-sim-restart]').hidden = scene !== 3;
+  updatePlanner();
+  if (focus && planner.open) planner.querySelector(`[data-scene="${scene}"] h3`).focus({preventScroll:true});
+ }
+ function resetSimulation() {
+  planner.querySelector('[name=party][value=individual]').checked = true;
+  planner.querySelector('[name=readiness][value=first]').checked = true;
+  showScene(1);
  }
  document.querySelectorAll('.prepare-visit').forEach(button => { button.hidden = false; button.addEventListener('click', () => {
-  triggeringButton = button; updatePlanner(); planner.showModal(); journey(3);
+  triggeringButton = button; changingRoute = false; resetSimulation(); planner.showModal(); showScene(1); journey(3);
  }); });
  planner.querySelector('.planner-close').addEventListener('click', () => planner.close());
- planner.addEventListener('close', () => { journey(2); triggeringButton?.focus(); });
+ planner.querySelector('[data-sim-next]').addEventListener('click', () => showScene(scene + 1));
+ planner.querySelector('[data-sim-back]').addEventListener('click', () => showScene(scene - 1));
+ planner.querySelector('[data-sim-restart]').addEventListener('click', resetSimulation);
+ planner.querySelector('[data-sim-change-route]').addEventListener('click', () => { changingRoute = true; planner.close(); });
+ planner.addEventListener('close', () => {
+  journey(2);
+  if (changingRoute) document.querySelector('[data-service][aria-selected=true]')?.focus(); else triggeringButton?.focus();
+ });
  planner.addEventListener('change', updatePlanner);
  document.addEventListener('rk:languagechange', updatePlanner);
  document.addEventListener('rk:servicechange', () => { journey(2); updatePlanner(); });
+}
+
+// Film chapters map to the original notary clip's actual timeline.
+const storyChapters = [...document.querySelectorAll('[data-story-time]')];
+if (heroVideo && storyChapters.length) {
+ function syncStory() {
+  const time = heroVideo.currentTime || 0;
+  const duration = Number.isFinite(heroVideo.duration) ? heroVideo.duration : 10;
+  const active = time >= 7 ? 2 : time >= 3.5 ? 1 : 0;
+  storyChapters.forEach((button, index) => {
+   button.setAttribute('aria-pressed', String(index === active));
+   const start = Number(button.dataset.storyTime);
+   const end = index < storyChapters.length - 1 ? Number(storyChapters[index + 1].dataset.storyTime) : duration;
+   const fraction = Math.max(0, Math.min(1, (time - start) / (end - start)));
+   button.style.setProperty('--chapter-progress', `${fraction * 100}%`);
+  });
+ }
+ storyChapters.forEach(button => button.addEventListener('click', () => {
+  const seek = () => { heroVideo.currentTime = Number(button.dataset.storyTime); heroVideo.play().catch(() => {}); syncStory(); };
+  if (heroVideo.readyState >= 1) seek(); else { heroVideo.addEventListener('loadedmetadata', seek, {once:true}); heroVideo.preload = 'auto'; heroVideo.src = heroVideo.dataset.videoSrc; heroVideo.load(); }
+ }));
+ heroVideo.addEventListener('timeupdate', syncStory); heroVideo.addEventListener('loadedmetadata', syncStory); syncStory();
 }
