@@ -99,3 +99,4 @@ body:not(.notary-page) .cinema-hero .hero-shade{background:#001c196b;box-shadow:
 .portrait .portrait-crop img.cinematic-headshot{position:static;width:100%;height:100%;max-width:100%;left:auto;top:auto;transform:none;translate:none!important;filter:none;object-fit:cover;object-position:50% 35%;border:0;box-shadow:none}
 
 .rk-page .back-top{bottom:96px}.rk-page .cinema-hero .video-toggle{right:7%;bottom:110px}
+.rk-office-address{font-style:normal;border-top:1px solid var(--line);padding:23px 0 15px}.rk-office-address small{display:block;text-transform:uppercase;letter-spacing:1px;font-size:11px;color:var(--muted);margin-bottom:9px}.rk-office-address strong{font-size:20px;font-weight:500;letter-spacing:-.4px}.rk-office-address p{font-size:15px;line-height:1.8;margin:12px 0 18px}.rk-office-address .text-link{font-size:12px;gap:20px}

@@ -53,3 +53,11 @@ final result: passed
 RK now has a bilingual floating WhatsApp action to `https://wa.me/6281398880079`, matching the supplied 081398880079 number. Its top strip and enquiry section show +62 813 9888 0079 and `ryans.meet@gmail.com`. The misleading shared-contact notice was replaced with a direct-to-Ryan enquiry note. Notary HTML and all Nadia contact destinations remain unchanged. Both floating actions share the existing accessible design; RK’s video and back-to-top controls are spaced above the contact button.
 
 Final suite: 118 Chromium checks passed, with no page/console errors. New checks verify RK’s contact destination, two new mailto links, absence of Nadia’s email from the corporate page, Indonesian accessible label, mobile touch size and separation from the video control. Existing notary destination checks remain passing. Reviewed the updated `test-results/index-desktop.png` capture; no actionable visual issue found. No external messages or emails were sent.
+
+## Latest update: RK office address
+
+Added Menara Imperium and the user-confirmed Ground Floor (GF) to the corporate contact section, with the building street/postal address and a Google Maps directions link. English and Indonesian labels include “Ground Floor (GF)” / “Lantai Dasar (GF)”. Notary location content is unchanged.
+
+Focused Chromium verification passed: visible address and GF, correct Maps host/query, Indonesian floor translation, 390px overflow check, unchanged Indramayu notary address, and no page errors. Reviewed `test-results/rk-office-address.png` (1440 × 1000); mobile evidence is `test-results/rk-office-address-mobile.png` (390 × 844). No substantive layout issue found.
+
+Source limitation: direct Google access was denied by the environment proxy (HTTP 403). No claim of live Google verification is made. The user supplied Menara Imperium and GF; Google cross-check of the street/postal address remains pending environment network activation.
