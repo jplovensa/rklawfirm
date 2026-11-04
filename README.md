@@ -19,7 +19,7 @@ CHROMIUM_PATH=/usr/bin/chromium npm test
 
 Start the server before testing. Set `BASE_URL` for another server address and `CHROMIUM_PATH` for another Chromium executable. If needed, install a Playwright browser using `npx playwright install chromium`, then set `CHROMIUM_PATH` to its executable. The prepared cloud environment has system Chromium 154 installed; browser execution requires supported sandbox escalation.
 
-73 browser checks cover both pages, loaded images, local Inter fonts, responsive widths, navigation, service menu selection and keyboard behavior, enquiry text, direct service links, JavaScript-disabled fallback, video playback, pause/resume, reduced motion, opening-film dismissal/failure fallback, bilingual persistence, translated enquiries and console errors. Screenshots are saved to ignored `test-results/`.
+87 browser checks cover both pages, loaded images, local Inter fonts, responsive widths, navigation, service menu selection and keyboard behavior, enquiry text, direct service links, JavaScript-disabled fallback, video playback, pause/resume, reduced motion, opening-film dismissal/failure fallback, bilingual persistence, translated enquiries and console errors. Screenshots are saved to ignored `test-results/`.
 
 ## Design and assets
 
@@ -42,4 +42,6 @@ The opening film plays once per browser session, using the supplied hero video w
 
 The EN / ID switch translates navigation, headings, practice details, service descriptions, FAQs, accessibility labels, titles and enquiry messages. Language is stored locally and carried in `?lang=id` links across pages. No personal information is stored. Static no-JavaScript content remains available in English. The translation dictionary and language behavior are in `i18n.js`; preserve the `data-i18n` keys when editing markup. Proper names, official credentials and addresses remain unchanged.
 
-The notary page now has a full-width cinematic hero, an editorial identity strip and a numbered service explorer. Select directly, use keyboard arrows/Home/End, or use previous/next controls. The selected service, detail panel, counter and WhatsApp message stay in sync when switching language.
+The notary practice has its own Nadia Difa Khairunnisa header, warm ivory/sage palette, editorial split hero with the supplied video in a moving aperture, and outcome-led service choices. Select directly, use keyboard arrows/Home/End, or use previous/next controls. A three-stage journey leads from purpose to details to visit preparation. The planner asks only individual/business and initial-guidance/documents choices, then prepares a service-specific WhatsApp message. It never requests or stores identity documents. Its Escape/close behavior returns focus to the initiating control. Language switching updates all content and enquiry text.
+
+The opening uses an expanding letterbox aperture, a slow film push, staged typography and an upward shutter exit. The notary opening displays Nadia’s name rather than RK branding. The main corporate layout and content are preserved. The second uploaded video was byte-identical to the original supplied clip; the existing optimized, audio-free asset is reused in both hero treatments.

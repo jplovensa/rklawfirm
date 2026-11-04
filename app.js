@@ -40,7 +40,7 @@ if (opening && typeof opening.showModal === 'function') {
     opening.close(); document.documentElement.classList.remove('opening-active');
     openingActive = false; film.removeAttribute('src'); film.load();
     document.dispatchEvent(new Event('rk:openingcomplete'));
-   }, reducedMotion.matches ? 0 : 350);
+   }, reducedMotion.matches ? 0 : 620);
   }
   releaseOpening = dismissOpening;
   opening.querySelector('.opening-skip').addEventListener('click', dismissOpening);
@@ -74,7 +74,7 @@ if (servicePicker) {
   panels.forEach(panel => { panel.hidden = panel.id !== id; panel.classList.toggle('panel-enter', panel.id === id); });
   const counter = document.querySelector('[data-service-counter]');
   if (counter) counter.textContent = `${String(tabs.findIndex(tab => tab.dataset.service === id) + 1).padStart(2, '0')} / ${String(tabs.length).padStart(2, '0')}`;
-  if (updateURL) history.replaceState(null, '', `#${id}`);
+  if (updateURL) { history.replaceState(null, '', `#${id}`); document.dispatchEvent(new CustomEvent('rk:servicechange', {detail:{id}})); }
  }
  document.querySelector('.service-stepper')?.removeAttribute('hidden');
  function stepService(direction) {
@@ -132,3 +132,31 @@ const stickyHeader = document.querySelector('.site-header');
 let headerTick = false;
 function syncHeader() { if (headerTick) return; headerTick = true; requestAnimationFrame(() => { stickyHeader?.classList.toggle('is-scrolled', scrollY > 40); headerTick = false; }); }
 window.addEventListener('scroll', syncHeader, {passive:true});syncHeader();
+
+// The notary's guided visit planner keeps personal documents out of the website.
+const planner = document.querySelector('.visit-planner');
+if (planner) {
+ let triggeringButton;
+ function journey(stage) { document.querySelectorAll('[data-journey]').forEach(step => { if (Number(step.dataset.journey) === stage) step.setAttribute('aria-current', 'step'); else step.removeAttribute('aria-current'); }); }
+ function updatePlanner() {
+  const selected = document.querySelector('[data-service-panel]:not([hidden])');
+  if (!selected) return;
+  const title = selected.querySelector('h3').textContent;
+  planner.querySelector('[data-planner-service]').textContent = title;
+  const party = planner.querySelector('[name=party]:checked').value;
+  const readiness = planner.querySelector('[name=readiness]:checked').value;
+  const id = window.RKLanguage?.current === 'id';
+  const message = id
+   ? `Halo, saya ingin mengatur konsultasi mengenai ${title}. Layanan ini untuk ${party === 'business' ? 'badan usaha' : 'perorangan'}. ${readiness === 'documents' ? 'Saya memiliki dokumen untuk dibahas.' : 'Saya membutuhkan arahan awal.'} Mohon informasikan persyaratan, biaya, dan jadwal yang tersedia.`
+   : `Hello, I would like to arrange a consultation about ${title}. This is for ${party === 'business' ? 'a business' : 'an individual'}. ${readiness === 'documents' ? 'I have documents to discuss.' : 'I need initial guidance.'} Please confirm the requirements, fees and available appointments.`;
+  planner.querySelector('.planner-send').href = `https://wa.me/6285156129839?text=${encodeURIComponent(message)}`;
+ }
+ document.querySelectorAll('.prepare-visit').forEach(button => { button.hidden = false; button.addEventListener('click', () => {
+  triggeringButton = button; updatePlanner(); planner.showModal(); journey(3);
+ }); });
+ planner.querySelector('.planner-close').addEventListener('click', () => planner.close());
+ planner.addEventListener('close', () => { journey(2); triggeringButton?.focus(); });
+ planner.addEventListener('change', updatePlanner);
+ document.addEventListener('rk:languagechange', updatePlanner);
+ document.addEventListener('rk:servicechange', () => { journey(2); updatePlanner(); });
+}
