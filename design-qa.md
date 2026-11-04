@@ -35,3 +35,13 @@ Typography: local Inter retained; large light-weight journey copy and compact ch
 100 Playwright / Chromium checks passed; no normal-operation console/page errors. Verified refreshed opening playback, skip/Escape/failure fallback, motion-aware loading, actual separate hero sources, full-width notary media, chapter seeking, video pause/play, navigation, language persistence, long-text visibility, all service choices, keyboard selection, simulation branches, back/restart, summary/message derivation, change-route focus, mobile dialog width, and no-JavaScript service reading. Source MP4 metadata verified: both 1280 × 720 H.264; optimized site videos have no audio stream.
 
 External WhatsApp messages were not sent. Safari/iOS-specific rendering remains untested; poster/manual-play fallbacks remain available. Publication status is verified separately through GitHub Actions.
+
+## Latest update: colour headshot and notary WhatsApp
+
+final result: passed
+
+- Replaced the grayscale poster crop with `assets/ryan-cinematic.webp`, an AI-assisted colour headshot edit from the supplied founder reference. Warm natural skin tones, charcoal/emerald background, and restrained cinematic lighting. Removed the grayscale filter and old poster-crop positioning for this asset. The optimized 100KB WebP fits the existing founder frame.
+- Added the notary-only floating WhatsApp link to `https://wa.me/6285156129839`, with a licensed WhatsApp icon, English/Indonesian accessible name, visible focus, a desktop label and a 56px mobile target. It opens a new tab; no external message was sent during testing.
+- Reserved film-chapter width and moved the back-to-top control above the contact button to avoid overlapping controls. Native dialog top layers keep the floating link behind active modal flows.
+- Visually inspected `test-results/colour-founder.png` (1440 × 1000) and `test-results/notary-whatsapp-mobile.png` (390 × 844). Additional desktop contact capture: `test-results/notary-whatsapp-desktop.png`. Density 1. Founder crop, skin colour, text rhythm, floating icon and chapter separation are readable. No P0/P1/P2 issue remains in these states.
+- Final browser suite: 111 checks passed with no console/page errors. New coverage verifies the correct WhatsApp destination, new-tab behavior, bilingual accessible label, mobile touch size, chapter separation at desktop/mobile widths, absence of the floating link on the corporate page, loaded colour-headshot source and computed absence of grayscale. Existing video, refresh opening, language and simulation checks remain passing.

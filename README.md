@@ -19,7 +19,7 @@ CHROMIUM_PATH=/usr/bin/chromium npm test
 
 Start the server first. Override `BASE_URL` or `CHROMIUM_PATH` for another server/browser. The prepared cloud machine has system Chromium 154; browser execution may need supported command-sandbox escalation. If a browser is absent, install with `npx playwright install chromium` and set its executable path.
 
-100 browser checks cover both routes/languages, image and Inter loading, responsive text visibility, navigation, separate hero assets, video playback/pause, chapter seeking, opening replay on refresh, skip/Escape/media failure, reduced motion, service selection, keyboard controls, bilingual enquiries and simulation progression/back/restart/route changes. Screenshots are saved to ignored `test-results/`.
+111 browser checks cover both routes/languages, image and Inter loading, responsive text visibility, navigation, separate hero assets, video playback/pause, chapter seeking, opening replay on refresh, skip/Escape/media failure, reduced motion, service selection, keyboard controls, bilingual enquiries and simulation progression/back/restart/route changes. Screenshots are saved to ignored `test-results/`.
 
 ## Two video narratives
 
@@ -45,9 +45,11 @@ Back preserves choices. Play again resets them. Choose a different route returns
 - EN / ID translates headings, public copy, controls, accessibility labels, metadata, simulation feedback, summaries and enquiry messages. Selection is stored locally and carried via `?lang=id`. Edit the dictionary in `i18n.js` while preserving `data-i18n` keys. Proper names, credentials and addresses stay unchanged. Static no-JavaScript content is English.
 - Local Inter fonts (400/500/600/700) include the SIL Open Font License in `assets/fonts/OFL.txt`.
 - Bootstrap Icons include the MIT license in `assets/ICONS-LICENSE.txt`.
-- The RK monogram and practice photography are generated assets; both videos were supplied by the user. The founder uses the original supplied photograph via a CSS crop.
+- The RK monogram and practice photography are generated assets; both videos were supplied by the user. The cinematic colour headshot is an AI-assisted edit of the supplied founder photograph. The original reference is retained at `assets/ryan-original.jpeg`. The site applies no grayscale filter to the new headshot.
 - Biography and contact details come from supplied references. The user authorized Nadia's contact channels for both practices. No third-party client matters, awards or outcomes are claimed.
 
 ## Cloud setup
 
 Tested installation/startup instructions are saved in the environment draft. Internet permissions are configured separately from scripts. The site layout is grounded in user-provided reference screenshots; live source access was restricted during development.
+
+The notary page has a fixed WhatsApp contact button linked to `https://wa.me/6285156129839`. Its label and accessible name are bilingual. Desktop includes a text label; mobile uses a 56px icon button. Film chapters reserve room for the button and the back-to-top control sits above it. Native dialog layers keep the contact button behind opening/simulation overlays. No WhatsApp message is sent automatically.
