@@ -19,7 +19,7 @@ CHROMIUM_PATH=/usr/bin/chromium npm test
 
 Start the server before testing. Set `BASE_URL` for another server address and `CHROMIUM_PATH` for another Chromium executable. If needed, install a Playwright browser using `npx playwright install chromium`, then set `CHROMIUM_PATH` to its executable. The prepared cloud environment has system Chromium 154 installed; browser execution requires supported sandbox escalation.
 
-47 browser checks cover both pages, loaded images, local Inter fonts, responsive widths, navigation, service menu selection and keyboard behavior, enquiry text, direct service links, JavaScript-disabled fallback, video playback, pause/resume, reduced motion and console errors. Screenshots are saved to ignored `test-results/`.
+73 browser checks cover both pages, loaded images, local Inter fonts, responsive widths, navigation, service menu selection and keyboard behavior, enquiry text, direct service links, JavaScript-disabled fallback, video playback, pause/resume, reduced motion, opening-film dismissal/failure fallback, bilingual persistence, translated enquiries and console errors. Screenshots are saved to ignored `test-results/`.
 
 ## Design and assets
 
@@ -35,3 +35,11 @@ Start the server before testing. Set `BASE_URL` for another server address and `
 ## Cloud setup
 
 The environment draft has tested `install_script` and `start_skill` instructions. Internet access is controlled separately by environment settings, never by a shell script. Custom domain additions for `makeslaw.com` and `www.makeslaw.com` were saved for optional further live-source inspection. The current design is grounded in screenshots provided directly by the user.
+
+## Cinematic opening and bilingual experience
+
+The opening film plays once per browser session, using the supplied hero video with an RK title sequence. Visitors can skip it or press Escape. It is automatically bypassed for reduced-motion preferences, data-saving mode and deep links. The opening has a hard timeout and closes immediately if playback fails; it never waits indefinitely for a download. Without JavaScript, the dialog remains closed.
+
+The EN / ID switch translates navigation, headings, practice details, service descriptions, FAQs, accessibility labels, titles and enquiry messages. Language is stored locally and carried in `?lang=id` links across pages. No personal information is stored. Static no-JavaScript content remains available in English. The translation dictionary and language behavior are in `i18n.js`; preserve the `data-i18n` keys when editing markup. Proper names, official credentials and addresses remain unchanged.
+
+The notary page now has a full-width cinematic hero, an editorial identity strip and a numbered service explorer. Select directly, use keyboard arrows/Home/End, or use previous/next controls. The selected service, detail panel, counter and WhatsApp message stay in sync when switching language.

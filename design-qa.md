@@ -1,39 +1,42 @@
-# RK website design QA
+# RK cinematic and bilingual update — design QA
 
 final result: passed
 
-## Source and intentional adaptations
+## Design target and scope
 
-Source visual truth: two Makes & Partners screenshots supplied by the user in the conversation: desktop home hero and scrolled asymmetric image grid. Each is 1920 × 1080 including macOS/browser chrome. The page content is approximately 1905 × 854 after excluding browser/OS chrome. Source screenshots are available inline in the conversation, not as downloadable local files. The supplied MP4 is the user-selected replacement hero media.
+The existing RK site and user-supplied Makes & Partners screenshots remain the baseline for the homepage header and layout. This iteration intentionally adds a cinematic opening, English/Bahasa Indonesia controls and a redesigned cinematic notary journey as requested. No pixel-identical source claim is made for the newly designed notary content. Existing RK emerald/ivory colors, local Inter, supplied video and actual founder photo are preserved.
 
-Reviewed the inline screenshots against rendered captures of the same header/hero and scrolled grid regions. This is a screenshot-led adaptation, not a live-source interaction clone. Emerald RK branding, Inter, the user video, RK monogram, practice descriptions rather than another firm's client matters, and a separate interactive notary journey are intentional user-directed differences. No claim is made about unseen source sections.
+## Rendered visual evidence
 
-## Rendered evidence
+All captures are actual Chromium screenshots at deviceScaleFactor 1:
 
-- `test-results/screenshot-reference-desktop.png`: 1905 × 854 CSS pixels / image pixels, density 1, top scroll position, reduced-motion poster state. Matches the source content viewport after excluding browser chrome.
-- `test-results/practice-mosaic.png`: same desktop size, scrolled photographic grid with compact navigation.
-- `test-results/index-desktop.png`, `test-results/notary-desktop.png`: 1440 × 1100, density 1; full navigation and hero areas. Home video paused at 5s for repeatable visual review.
-- `test-results/hero-mobile.png`: 390 × 844, density 1, poster fallback, no horizontal overflow.
-- `test-results/notary-menu-desktop.png` and `test-results/notary-menu-mobile.png`: active service and associated detail/enquiry panel.
+- `test-results/opening-film.png`: 1440 × 1000, first visit, modal opening film in progress with RK title and visible skip control.
+- `test-results/notary-cinema-en.png`: 1440 × 1000, English hero, reduced-motion poster state, full header and language switch.
+- `test-results/notary-explorer-en.png` and `test-results/notary-explorer-id.png`: 1440 × 1000, scrolled service explorer with active service and detail panel.
+- `test-results/notary-cinema-mobile-id.png`: 390 × 844, Indonesian hero and mobile header.
+- `test-results/notary-explorer-mobile-id.png`: 390 × 844, selected legalisation service, readable detail text and enquiry action; remaining content continues naturally below the viewport.
+
+Opened and inspected the full desktop opening/hero, focused service explorer and mobile hero/detail captures. The longer Indonesian copy wraps without overflow or obstructing the language switch. Source mobile screenshots were not supplied, so mobile review uses responsive usability requirements rather than a source-fidelity claim.
 
 ## Findings and corrections
 
-- Initial image-loading assertion failed because the founder portrait now loads lazily below the hero. Updated the meaningful asset check to explicitly load and decode all images, retaining failure on missing or corrupt assets. Final check passes.
-- Captures immediately after programmatic scrolling could precede the compact-header scroll update. A settled desktop capture checks the final state.
-- No remaining P0/P1/P2 visual or functional issues found in the reviewed routes/states.
+1. Initial legacy video assertions selected both opening and background videos after the new dialog was added. Updated them to target the hero specifically; added separate actual opening-film interaction tests.
+2. Initial translation annotation left service names containing ampersands in English. Corrected text-node parsing and verified the translated service names and Indonesian WhatsApp message together.
+3. Updated current-page language query on switching language, so switching back to English and reloading cannot restore an obsolete `?lang=id` preference.
+4. Confirmed the notary hero CTA scrolls the services section to approximately 130px below the viewport top, clear of the compact sticky header. Service captures use the explorer itself to avoid intermediate scroll states.
+
+No actionable P0/P1/P2 issue remains in the reviewed routes and states.
 
 ## Fidelity surfaces
 
-- **Typography:** actual self-hosted Inter. Uppercase desktop navigation, restrained multi-line hero heading and readable practice descriptions follow the reference hierarchy. Source serif headline replaced deliberately per user request.
-- **Layout:** full-width contact strip, rectangular white navigation, edge-to-edge hero, half-width tall image beside a 2×2 grid. Compact sticky navigation and mobile menu verified. Layout adapts to one-column practice panels on phones; no unsupported source-mobile fidelity claim.
-- **Tokens:** emerald/white RK replaces source navy/gold. Flat rectangular structural elements and restrained image overlays follow the screenshots. Notary selector preserves clear active state and legible details.
-- **Assets:** supplied hero video optimized without audio; poster extracted from the same media. RK logo is a generated transparent raster asset, used in the header and white over the hero. Practice photographs are generated replacements, not hotlinked source images. Founder uses the real supplied image.
-- **Copy:** all practice content describes RK services and provided credentials; no Makes & Partners client matters, awards, case outcomes or firm identity copied.
+- Typography: self-hosted Inter retained. Large light-weight cinematic headings, restrained uppercase captions, numbered service controls and readable body text maintain RK's visual hierarchy. Indonesian titles intentionally use additional lines on narrow screens.
+- Layout: homepage structure retained; language controls fit the desktop and mobile header. Notary hero is full-width with a dark image treatment, followed by identity and service sections. Service menu and content sit side by side on desktop and stack on mobile.
+- Colors: dark emerald, pale sage and ivory; strong readable contrast across film overlays and service panels. No simulated loading percentages or unnecessary loading claims.
+- Assets: existing user-supplied video reused locally for opening and notary hero; no new third-party media dependency. Decorative motion is muted and optional. Logos, Inter and licensed icons load correctly.
+- Content: public copy, headings, FAQ answers, legal descriptions, controls, metadata and relevant accessibility labels have explicit Indonesian translations. Proper names and official credentials remain intact. Selected-service enquiries use the active language.
 
-## Functional validation
+## Functional evidence
 
-47 checks passed in Playwright / Chromium 154. Confirmed muted looping playback, pause/resume, absence of automatic video source under reduced motion, image decoding, Inter loading, every service selection and service-specific WhatsApp message, arrow/Home/End navigation, focus into details, reload/deep links, JavaScript-disabled fallback, mobile menu and Escape dismissal, responsive overflow, and no console/page errors. Checked widths 390, 768, 1024 and desktop captures at 1440/1905. Contact apps were not opened or messaged.
+73 Playwright / Chromium checks passed; no console/page errors in normal operation. Covered opening skip, Escape, once-per-session behavior across routes, media-failure escape, reduced-motion bypass, background video play/pause, responsive layouts, Inter/image loading, service selection and keyboard navigation, previous/next controls, translated enquiry text, language persistence on reload/cross-page navigation, switching back to English, no-JavaScript service reading and overflow checks in both languages. Checked widths 390, 768, 1024 and desktop at 1440.
 
-## Follow-up polish and limits
-
-Safari/iOS-specific autoplay and rendering were not available for testing. Poster and manual playback controls cover autoplay denial. A standalone high-resolution founder photo would improve on the supplied poster crop. Live Makes & Partners access remains restricted, but it no longer blocks this screenshot-led adaptation. GitHub Pages hosting is configured by the repository owner; source push alone does not activate it.
+The deployment artifact includes `i18n.js`. Scripts and workflow syntax checks passed. External WhatsApp messages were not sent. Safari/iOS-specific autoplay remains untested; poster/manual controls and bounded opening behavior cover autoplay denial. Live deployment status is checked separately from local browser validation.

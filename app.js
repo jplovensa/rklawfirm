@@ -1,3 +1,4 @@
+const t = english => window.RKLanguage?.t(english) || english;
 const menu = document.querySelector('.menu-toggle');
 const nav = document.querySelector('#navigation');
 function closeMenu() { menu?.setAttribute('aria-expanded', 'false'); nav?.classList.remove('is-open'); }
@@ -18,6 +19,40 @@ if (portraitImage && !reducedMotion.matches && matchMedia('(pointer:fine)').matc
  window.addEventListener('scroll', updateDepth, { passive:true });
  reducedMotion.addEventListener('change', updateDepth);
 }
+
+// A bounded opening film; it never holds the page behind a media download.
+const opening = document.querySelector('.opening-film');
+let openingActive = false;
+let releaseOpening = () => {};
+if (opening && typeof opening.showModal === 'function') {
+ let seen = false;
+ try { seen = sessionStorage.getItem('rk-opening-seen') === '1'; } catch {}
+ if (!seen && !location.hash && !reducedMotion.matches && !navigator.connection?.saveData) {
+  openingActive = true;
+  const film = opening.querySelector('video');
+  let exiting = false;
+  opening.showModal(); document.documentElement.classList.add('opening-active');
+  function dismissOpening() {
+   if (exiting) return; exiting = true;
+   try { sessionStorage.setItem('rk-opening-seen', '1'); } catch {}
+   film.pause(); opening.classList.add('is-leaving');
+   setTimeout(() => {
+    opening.close(); document.documentElement.classList.remove('opening-active');
+    openingActive = false; film.removeAttribute('src'); film.load();
+    document.dispatchEvent(new Event('rk:openingcomplete'));
+   }, reducedMotion.matches ? 0 : 350);
+  }
+  releaseOpening = dismissOpening;
+  opening.querySelector('.opening-skip').addEventListener('click', dismissOpening);
+  opening.addEventListener('cancel', event => { event.preventDefault(); dismissOpening(); });
+  film.addEventListener('error', dismissOpening, {once:true});
+  setTimeout(dismissOpening, 4200);
+  film.src = 'assets/rk-hero.mp4';
+  film.play().then(() => setTimeout(dismissOpening, 3200)).catch(dismissOpening);
+  reducedMotion.addEventListener('change', () => { if (reducedMotion.matches) dismissOpening(); });
+ }
+}
+
 // Progressive enhancement: without JavaScript, every service remains readable.
 const servicePicker = document.querySelector('[data-service-picker]');
 if (servicePicker) {
@@ -34,11 +69,32 @@ if (servicePicker) {
    const selected = tab.dataset.service === id;
    tab.setAttribute('aria-selected', String(selected));
    tab.tabIndex = selected ? 0 : -1;
-   tab.querySelector('.service-card-state').textContent = selected ? 'Selected service' : 'View service';
+   tab.querySelector('.service-card-state').textContent = t(selected ? 'Selected service' : 'View service');
   });
-  panels.forEach(panel => { panel.hidden = panel.id !== id; });
+  panels.forEach(panel => { panel.hidden = panel.id !== id; panel.classList.toggle('panel-enter', panel.id === id); });
+  const counter = document.querySelector('[data-service-counter]');
+  if (counter) counter.textContent = `${String(tabs.findIndex(tab => tab.dataset.service === id) + 1).padStart(2, '0')} / ${String(tabs.length).padStart(2, '0')}`;
   if (updateURL) history.replaceState(null, '', `#${id}`);
  }
+ document.querySelector('.service-stepper')?.removeAttribute('hidden');
+ function stepService(direction) {
+  const active = tabs.findIndex(tab => tab.getAttribute('aria-selected') === 'true');
+  selectService(tabs[(active + direction + tabs.length) % tabs.length].dataset.service, true);
+ }
+ document.querySelector('[data-service-prev]')?.addEventListener('click', () => stepService(-1));
+ document.querySelector('[data-service-next]')?.addEventListener('click', () => stepService(1));
+ function refreshServiceLanguage() {
+  tabs.forEach(tab => { tab.querySelector('.service-card-state').textContent = t(tab.getAttribute('aria-selected') === 'true' ? 'Selected service' : 'View service'); });
+  panels.forEach(panel => {
+   const title = panel.querySelector('h3').textContent;
+   const message = window.RKLanguage?.current === 'id'
+    ? `Halo, saya ingin berkonsultasi mengenai ${title} dengan kantor notaris. Mohon informasikan persyaratan dan jadwal konsultasi yang tersedia.`
+    : `Hello, I would like to discuss ${title} with the notary office. Could you confirm the requirements and arrange a consultation?`;
+   panel.querySelector('.button').href = `https://wa.me/6285156129839?text=${encodeURIComponent(message)}`;
+  });
+ }
+ document.addEventListener('rk:languagechange', refreshServiceLanguage);
+ refreshServiceLanguage();
  const initialID = location.hash.slice(1);
  selectService(tabs.some(tab => tab.dataset.service === initialID) ? initialID : tabs[0].dataset.service);
  tabs.forEach((tab, index) => {
@@ -59,11 +115,14 @@ const heroVideo = document.querySelector('.hero-video');
 const videoToggle = document.querySelector('.video-toggle');
 if (heroVideo && videoToggle) {
  videoToggle.hidden = false;
- function syncVideoButton() { videoToggle.textContent = heroVideo.paused ? 'Play motion' : 'Pause motion'; videoToggle.setAttribute('aria-label', heroVideo.paused ? 'Play background video' : 'Pause background video'); }
+ function syncVideoButton() { videoToggle.textContent = t(heroVideo.paused ? 'Play motion' : 'Pause motion'); videoToggle.setAttribute('aria-label', t(heroVideo.paused ? 'Play background video' : 'Pause background video')); }
  function loadVideo() { if (!heroVideo.getAttribute('src')) heroVideo.src = heroVideo.dataset.videoSrc; }
  function playVideo() { loadVideo(); heroVideo.play().then(syncVideoButton).catch(syncVideoButton); }
  const saveData = navigator.connection?.saveData;
- if (!reducedMotion.matches && !saveData) playVideo();
+ function autoPlayHero() { if (!reducedMotion.matches && !saveData) playVideo(); }
+ if (!openingActive) autoPlayHero();
+ document.addEventListener('rk:openingcomplete', autoPlayHero, {once:true});
+ document.addEventListener('rk:languagechange', syncVideoButton);
  videoToggle.addEventListener('click', () => { if (heroVideo.paused) playVideo(); else heroVideo.pause(); });
  heroVideo.addEventListener('play', syncVideoButton);heroVideo.addEventListener('pause', syncVideoButton);
  reducedMotion.addEventListener('change', () => { if (reducedMotion.matches) heroVideo.pause(); });

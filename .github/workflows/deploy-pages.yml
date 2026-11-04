@@ -32,7 +32,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/rk-site"
-          cp index.html notary.html styles.css app.js .nojekyll "$RUNNER_TEMP/rk-site/"
+          cp index.html notary.html styles.css app.js i18n.js .nojekyll "$RUNNER_TEMP/rk-site/"
           cp -R assets "$RUNNER_TEMP/rk-site/assets"
           test -s "$RUNNER_TEMP/rk-site/index.html"
           test -s "$RUNNER_TEMP/rk-site/notary.html"
