@@ -45,3 +45,11 @@ final result: passed
 - Reserved film-chapter width and moved the back-to-top control above the contact button to avoid overlapping controls. Native dialog top layers keep the floating link behind active modal flows.
 - Visually inspected `test-results/colour-founder.png` (1440 × 1000) and `test-results/notary-whatsapp-mobile.png` (390 × 844). Additional desktop contact capture: `test-results/notary-whatsapp-desktop.png`. Density 1. Founder crop, skin colour, text rhythm, floating icon and chapter separation are readable. No P0/P1/P2 issue remains in these states.
 - Final browser suite: 111 checks passed with no console/page errors. New coverage verifies the correct WhatsApp destination, new-tab behavior, bilingual accessible label, mobile touch size, chapter separation at desktop/mobile widths, absence of the floating link on the corporate page, loaded colour-headshot source and computed absence of grayscale. Existing video, refresh opening, language and simulation checks remain passing.
+
+## Latest update: separate RK contact channels
+
+final result: passed
+
+RK now has a bilingual floating WhatsApp action to `https://wa.me/6281398880079`, matching the supplied 081398880079 number. Its top strip and enquiry section show +62 813 9888 0079 and `ryans.meet@gmail.com`. The misleading shared-contact notice was replaced with a direct-to-Ryan enquiry note. Notary HTML and all Nadia contact destinations remain unchanged. Both floating actions share the existing accessible design; RK’s video and back-to-top controls are spaced above the contact button.
+
+Final suite: 118 Chromium checks passed, with no page/console errors. New checks verify RK’s contact destination, two new mailto links, absence of Nadia’s email from the corporate page, Indonesian accessible label, mobile touch size and separation from the video control. Existing notary destination checks remain passing. Reviewed the updated `test-results/index-desktop.png` capture; no actionable visual issue found. No external messages or emails were sent.

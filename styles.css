@@ -91,9 +91,11 @@ body:not(.notary-page) .cinema-hero .hero-shade{background:#001c196b;box-shadow:
 @media(max-width:400px){.journey-hero-copy h1{font-size:56px;letter-spacing:-2.7px}.journey-hero-copy>p:not(.eyebrow){font-size:15px}.story-chapters{gap:10px}.story-chapters button{font-size:8px}.simulation-dialog .planner-main{padding-left:22px;padding-right:22px}}
 @media(prefers-reduced-motion:reduce){.simulation-scene{animation:none}.story-playhead{transition:none}}
 /* A persistent direct contact route for Nadia's notarial practice. */
-.notary-whatsapp{position:fixed;right:24px;bottom:24px;z-index:30;display:flex;align-items:center;gap:12px;min-height:56px;padding:15px 20px;background:#1e6546;color:#fff;border:1px solid #ffffff90;border-radius:32px;box-shadow:0 8px 28px #173d2938;font-size:12px;font-weight:500;transition:background .2s,translate .2s,box-shadow .2s}.notary-whatsapp img{width:24px;height:24px;filter:invert(1);flex-shrink:0}.notary-whatsapp:hover{background:#164c35;translate:0 -3px;box-shadow:0 12px 32px #173d2945}.notary-page .back-top{bottom:96px}
-@media(max-width:650px){.notary-whatsapp{bottom:calc(16px + env(safe-area-inset-bottom,0px));right:16px;width:56px;height:56px;padding:15px;justify-content:center}.notary-whatsapp>span{display:none}}
+:is(.notary-whatsapp,.rk-whatsapp){position:fixed;right:24px;bottom:24px;z-index:30;display:flex;align-items:center;gap:12px;min-height:56px;padding:15px 20px;background:#1e6546;color:#fff;border:1px solid #ffffff90;border-radius:32px;box-shadow:0 8px 28px #173d2938;font-size:12px;font-weight:500;transition:background .2s,translate .2s,box-shadow .2s}:is(.notary-whatsapp,.rk-whatsapp) img{width:24px;height:24px;filter:invert(1);flex-shrink:0}:is(.notary-whatsapp,.rk-whatsapp):hover{background:#164c35;translate:0 -3px;box-shadow:0 12px 32px #173d2945}.notary-page .back-top{bottom:96px}
+@media(max-width:650px){:is(.notary-whatsapp,.rk-whatsapp){bottom:calc(16px + env(safe-area-inset-bottom,0px));right:16px;width:56px;height:56px;padding:15px;justify-content:center}:is(.notary-whatsapp,.rk-whatsapp)>span{display:none}}
 .notary-journey-hero .story-chapters{right:max(7%,260px)}
 @media(max-width:650px){.notary-journey-hero .story-chapters{right:90px}}
 /* Full-colour edited headshot replaces the grayscale poster crop. */
 .portrait .portrait-crop img.cinematic-headshot{position:static;width:100%;height:100%;max-width:100%;left:auto;top:auto;transform:none;translate:none!important;filter:none;object-fit:cover;object-position:50% 35%;border:0;box-shadow:none}
+
+.rk-page .back-top{bottom:96px}.rk-page .cinema-hero .video-toggle{right:7%;bottom:110px}
